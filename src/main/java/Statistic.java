@@ -19,6 +19,7 @@ import java.util.List;
 public class Statistic
 {
     private int id;
+    private ArrayList<Integer> listId;
     private int projectId;
     private int sprintId;
 

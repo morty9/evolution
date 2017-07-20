@@ -1,3 +1,7 @@
+package models;
+
+import java.util.Date;
+
 /**
  * Created by Zeke on 07/07/2017.
  */
@@ -11,6 +15,8 @@ public class Task
     private int id_category;
     private String color;
     private float businessValue;
+    //TOFIX
+    public Date taskDone;
 
     private int duration;
     private String status;
@@ -33,8 +39,17 @@ public class Task
         this.id_Listmember = id_Listmember;
     }
 
+    public Task(Date date)
+    {
+        this.taskDone = date;
+        this.duration = 1;
+    }
     public Task()
-    { }
+    {
+        this.taskDone = null;
+        this.duration = 1;
+
+    }
 
     public Task(int id)
     {

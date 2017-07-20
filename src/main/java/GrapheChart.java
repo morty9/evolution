@@ -6,10 +6,8 @@ import org.jfree.chart.annotations.XYLineAnnotation;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.Value;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.xy.XYDataset;
@@ -19,7 +17,6 @@ import org.jfree.ui.ApplicationFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.DateFormat;
 
 /**
  * Created by Zeke on 14/07/2017.
@@ -142,7 +139,7 @@ public class GrapheChart extends ApplicationFrame
 
     public XYDataset createDataset()
     {
-        XYSeries taskLine = new XYSeries("Task Todo");
+        XYSeries taskLine = new XYSeries("models.Task Todo");
         taskLine.add(1, 30);
         taskLine.add(2, 22);
         taskLine.add(3, 18);
@@ -158,29 +155,16 @@ public class GrapheChart extends ApplicationFrame
 
     }
 
-    public static double[] createData(double maxTimeTask)
-    {
-        double[] result;
-        double inc = maxTimeTask / 5;
-        double value1 = maxTimeTask;
-        double value2 = value1 - inc;
-        double value3 = value2 - inc;
-        double value4 = value3 - inc;
-        double value5 = value4 - inc;
-        double value6 = 0;
 
-        return new double[] {
-                value1, value2, value3, value4, value5, value6
-        };
-    }
 
     public static void launch(String button)
     {
         JDialog graphWindows = new JDialog();
         graphWindows.setTitle("Graphique des tâches");
 
+
         final double[][] data = new double[][] {
-                createData(30),
+                AlgorithmGraphe.createOptimalData(30),
                 {30, 30, 26, 26, 18, 14}
 
         };

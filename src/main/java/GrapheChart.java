@@ -27,11 +27,6 @@ public class GrapheChart extends ApplicationFrame
     public GrapheChart(String title)
     {
         super(title);
-
-
-
-
-        //setContentPane(chartPanel);
     }
 
     public JFreeChart createTaskChart(final CategoryDataset dataset)
@@ -76,7 +71,7 @@ public class GrapheChart extends ApplicationFrame
         final JFreeChart chart = ChartFactory.createAreaChart(
                 "Graphe du Business",
                 "Jours du sprint",
-                "Budget",
+                "Coût",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,

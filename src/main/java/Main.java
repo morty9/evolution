@@ -1,17 +1,8 @@
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.gantt.Task;
-import org.jfree.data.general.DatasetUtilities;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.xy.XYSeries;
+import models.Project;
+import models.Sprint;
+import models.Stat;
+import models.Task;
 
-import javax.swing.*;
-import java.awt.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -23,12 +14,28 @@ public class Main
     public static void main(String[] argv) throws Exception
     {
 
-
-        /*CallerApi s = new CallerApi();
+        /*CallerApi call = new CallerApi();
         System.out.println("Testing - Send Http GET request");
-        s.sendGet();*/
 
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        String jsonStat = call.sendGet("http://127.0.0.1:3000/scrummary/stats");
+        java.util.List<Stat> l = call.getListStatFromJson(jsonStat);
+
+        int idProj = l.get(0).getId_project();
+
+        String jsonProject = call.sendGet("http://127.0.0.1:3000/scrummary/projects/" + idProj);
+        Project p = call.getProjectFromJson(jsonProject);
+
+        int[] listIdSprint = p.getId_sprint();
+        int idSprint = listIdSprint[0];
+
+        String jsonSprint = call.sendGet("http://127.0.0.1:3000/scrummary/sprints/" + idSprint);
+        Sprint s = call.getSprintFromJson(jsonSprint);
+
+        String jsonTask = call.sendGet("http://127.0.0.1:3000/scrummary/tasks/2");
+        Task t = call.getTaskFromJson(jsonTask);*/
+
+
+        /*SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         String d1 = "18/07/2017";
         String d2 = "19/07/2017";
         Date date1 = format.parse(d1);
@@ -47,14 +54,18 @@ public class Main
         l.add(t4);
         l.add(t5);
         l.add(t6);
+        double[] res = AlgorithmGraphe.getDatasetTask(l);*/
 
-        double[] res = AlgorithmGraphe.getDatasetTask(l);
-
-        Date date = new Date();
+        /*Date date = new Date();
         String str = AlgorithmGraphe.dateToDayName(date);
-        System.out.println(str);
+        System.out.println(str);*/
 
         //GrapheChart.launch("ButtonTask");
+
+        String d1 = "22/07/2017";
+        String d2 = "26/07/2017";
+
+        long k = AlgorithmGraphe.getDurationSprint(d1, d2);
     }
 
 

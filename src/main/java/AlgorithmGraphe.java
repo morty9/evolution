@@ -2,6 +2,7 @@ import models.Stat;
 import models.Task;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +25,12 @@ public class AlgorithmGraphe {
         return result;
     }
 
+    public static Date stringToDate(String strDate) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date result = format.parse(strDate);
+        return result;
+    }
+
     public static double maxTaskHours(List<Task> listTask)
     {
         double result = 0;
@@ -36,7 +43,7 @@ public class AlgorithmGraphe {
 
 
 
-    public static double[] getDatasetTask(ArrayList<Task> listTask)
+    public static double[] getDatasetTask(ArrayList<Task> listTask, String beginDate, String endDate)
     {
         double[] result = new double[6];
         String[] weekDays = {"lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
@@ -48,7 +55,8 @@ public class AlgorithmGraphe {
             double dayHours = 0;
             for (Task t : listTask)
             {
-                String dayTask = dateToDayName(t.taskDone);
+                // TO TEST
+                String dayTask = t.getTaskDone();
                 if (dayTask.equals(d))
                 {
                     maxHours -= t.getDuration();
@@ -74,5 +82,19 @@ public class AlgorithmGraphe {
         return new double[] {
                 value1, value2, value3, value4, value5, value6
         };
+    }
+
+    public static long getDurationSprint(String beginDate, String endDate) throws ParseException {
+        Date beg = AlgorithmGraphe.stringToDate(beginDate);
+        Date end = AlgorithmGraphe.stringToDate(endDate);
+
+        Calendar calBeg = Calendar.getInstance();
+        Calendar calEnd = Calendar.getInstance();
+        calBeg.setTime(beg);
+        calEnd.setTime(end);
+
+        long res = (calEnd.getTimeInMillis() - calBeg.getTimeInMillis()) / 86400000;
+
+        return res + 1;
     }
 }

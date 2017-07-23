@@ -3,6 +3,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -14,7 +15,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import models.*;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -22,15 +26,18 @@ import java.util.ArrayList;
  */
 public class Ihm extends Application
 {
+    public boolean isComboSprintAlreadyCreated = false;
+    public ComboBox comboSprintGraphe;
+
+    public ArrayList<Task> dataListTask;
+    public String dateSprintBeg;
+    public String dateSprintEnd;
 
     public void start(Stage primaryStage) throws Exception
     {
         primaryStage.setTitle("Interface Evolution");
-        ObservableList<String> options = FXCollections.observableArrayList();
-        options.add("Sprint 1");
-        options.add("Sprint 2");
-        options.add("Sprint 3");
 
+        ObservableList<String> optionsProject = getListProjectName();
 
 
         //TO FIX: add icone
@@ -52,15 +59,49 @@ public class Ihm extends Application
 
         BorderPane pane = new BorderPane();
         GridPane gridPane = new GridPane();
-        Pane paneCombo = new Pane();
+        GridPane paneCombo = new GridPane();
 
-        ComboBox comboBoxSprint = new ComboBox(options);
-        comboBoxSprint.setValue("Sprint");
+
+        ComboBox comboBoxProject = new ComboBox(optionsProject);
+        comboBoxProject.setValue("Project");
+        comboBoxProject.setOnAction(event -> {
+            Project p = getProjectByTitle(comboBoxProject.getValue().toString());
+            if (isComboSprintAlreadyCreated == false)
+            {
+                ComboBox comboBoxSprint = new ComboBox(getListSprintName(p));
+                comboBoxSprint.setValue("Sprint");
+                paneCombo.add(comboBoxSprint, 0, 2);
+
+                comboSprintGraphe = comboBoxSprint;
+                isComboSprintAlreadyCreated = true;
+            }
+            else
+            {
+                deleteGridNodeByColRow(paneCombo, 0, 2);
+                ComboBox comboBoxSprint = new ComboBox(getListSprintName(p));
+                comboBoxSprint.setValue("Sprint");
+
+                comboSprintGraphe = comboBoxSprint;
+                paneCombo.add(comboBoxSprint, 0, 2);
+            }
+        });
 
 
         Button buttonTask = new Button("Graphe des Tâches");
         buttonTask.setOnAction(event -> {
-            GrapheChart.launch("ButtonTask");
+            try {
+                Project p = getProjectByTitle(comboBoxProject.getValue().toString());
+                String sprintName = comboSprintGraphe.getValue().toString();
+
+                // TO FIX CONITNUE, sprintName and Project is good
+                // to check the method createDataGraphe
+
+                DataGraph data = createDataGraphe(sprintName, p);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //GrapheChart.launch("ButtonTask");
         });
         Button buttonBusiness = new Button("Graphe Business");
         buttonBusiness.setOnAction(event -> {
@@ -69,17 +110,128 @@ public class Ihm extends Application
 
 
         //Set items to panel
-        paneCombo.getChildren().add(comboBoxSprint);
+        paneCombo.add(comboBoxProject, 0, 0);
+        paneCombo.setHgap(0.5f);
 
         gridPane.add(buttonTask, 0, 0, 2, 1);
         gridPane.add(buttonBusiness, 0, 1, 1, 1);
         gridPane.setHgap(0.5f);
+
         pane.setLeft(paneCombo);
         pane.setRight(gridPane);
         Scene scene = new Scene(pane);
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public ObservableList<String> getListProjectName()
+    {
+        CallerApi call = new CallerApi();
+        ObservableList<String> optionsProject = FXCollections.observableArrayList();
+
+        String jsonStat = null;
+        try {
+            jsonStat = call.sendGet("http://127.0.0.1:3000/scrummary/stats");
+            java.util.List<Stat> listStat = call.getListStatFromJson(jsonStat);
+
+            for (Stat s : listStat)
+            {
+                String jsonProject = call.sendGet("http://127.0.0.1:3000/scrummary/projects/" + s.getId_project());
+                Project p = call.getProjectFromJson(jsonProject);
+                optionsProject.add(p.getTitle());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return optionsProject;
+    }
+
+    public ObservableList<String> getListSprintName(Project project)
+    {
+        CallerApi call = new CallerApi();
+        ObservableList<String> optionsSprint = FXCollections.observableArrayList();
+        try {
+            for (int idSprint : project.getId_sprint())
+            {
+                String json = call.sendGet("http://127.0.0.1:3000/scrummary/sprints/" + idSprint);
+                Sprint s = call.getSprintFromJson(json);
+                optionsSprint.add(s.getTitle());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return optionsSprint;
+    }
+
+    public Project getProjectByTitle(String title)
+    {
+        CallerApi call = new CallerApi();
+        try {
+            String json = call.sendGet("http://127.0.0.1:3000/scrummary/stats");
+            java.util.List<Stat> listStat = call.getListStatFromJson(json);
+
+            for (Stat s : listStat)
+            {
+                String jsonProject = call.sendGet("http://127.0.0.1:3000/scrummary/projects/" + s.getId_project());
+                Project p = call.getProjectFromJson(jsonProject);
+                if (p.getTitle().equals(title))
+                    return p;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteGridNodeByColRow(GridPane pane, int column, int row)
+    {
+        ObservableList<Node> childrens = pane.getChildren();
+        for(Node node : childrens) {
+            if(node instanceof ComboBox && pane.getRowIndex(node) == row && pane.getColumnIndex(node) == column) {
+                pane.getChildren().remove(node);
+                break;
+            }
+        }
+    }
+
+    public DataGraph createDataGraphe(String sprintName, Project project) throws ParseException {
+        CallerApi call = new CallerApi();
+        Sprint sprint = new Sprint();
+        ArrayList<Task> listTask = new ArrayList<>();
+
+        try {
+            // Get the good sprint
+            for (int id : project.getId_sprint())
+            {
+                String jsonSprint = call.sendGet("http://127.0.0.1:3000/scrummary/sprints/" + id);
+                Sprint s = call.getSprintFromJson(jsonSprint);
+                if (s.getTitle().equals(sprintName)) {
+                    sprint = s;
+                    break;
+                }
+            }
+
+
+            // Build array list of task
+            for (int idTask : sprint.getId_listTasks())
+            {
+                String jsonTask = call.sendGet("http://127.0.0.1:3000/scrummary/tasks/" + idTask);
+                Task t = call.getTaskFromJson(jsonTask);
+                listTask.add(t);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //TO FIX
+        //long duration = AlgorithmGraphe.getDurationSprint(sprint.getBeginningDate(), sprint.getEndDate());
+
+        DataGraph result = new DataGraph(listTask, sprint.getBeginningDate(), sprint.getEndDate(), 1);
+
+        return result;
     }
 
     public static void main(String[] args) {

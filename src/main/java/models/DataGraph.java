@@ -14,12 +14,14 @@ public class DataGraph {
     private String dateBeg;
     private String dateEnd;
     private long sprintDuration;
+    private String[] listDateName;
 
     public DataGraph(ArrayList<Task> listTask, String dateBeg, String dateEnd, long sprintDuration) {
         this.listTask = listTask;
         this.dateBeg = dateBeg;
         this.dateEnd = dateEnd;
         this.sprintDuration = sprintDuration;
+
     }
 
     public ArrayList<Task> getListTask() {
@@ -52,5 +54,13 @@ public class DataGraph {
 
     public void setSprintDuration(long sprintDuration) {
         this.sprintDuration = sprintDuration;
+    }
+
+    public String[] getListDateName() {
+        return listDateName;
+    }
+
+    public void setListDateName(String[] listDateName) {
+        this.listDateName = listDateName;
     }
 }

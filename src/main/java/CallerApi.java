@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import models.*;
 
 import java.io.BufferedReader;
@@ -22,30 +23,35 @@ public class CallerApi
     // Send a get request and return the Json string
     public String sendGet(String strUrl) throws Exception
     {
-        URL url = new URL(strUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        try {
+            URL url = new URL(strUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("NET_AGENT", NET_AGENT);
-        int resCode = conn.getResponseCode();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("NET_AGENT", NET_AGENT);
+            int resCode = conn.getResponseCode();
 
-        //System.out.println("Sending 'GET' request to URL : " + url);
-        //System.out.println("Response Code : " + resCode);
+            //System.out.println("Sending 'GET' request to URL : " + url);
+            //System.out.println("Response Code : " + resCode);
 
-        BufferedReader buffInput = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader buffInput = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-        //Get the Json string
-        String outPut;
-        StringBuffer response = new StringBuffer();
-        while ((outPut = buffInput.readLine()) != null) {
-            response.append(outPut);
+            //Get the Json string
+            String outPut;
+            StringBuffer response = new StringBuffer();
+            while ((outPut = buffInput.readLine()) != null) {
+                response.append(outPut);
+            }
+            String jsonString = response.toString();
+
+            System.out.println("JSON: " + jsonString);
+
+            buffInput.close();
+            return jsonString;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        String jsonString = response.toString();
-
-        System.out.println("JSON: " + jsonString);
-
-        buffInput.close();
-        return jsonString;
+        return null;
     }
 
     // Get the list of stat from the Json string

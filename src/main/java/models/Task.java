@@ -137,15 +137,4 @@ public class Task
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    /*public Task(Date date)
-    {
-        this.taskDone = date;
-        this.duration = 1;
-    }
-    public Task()
-    {
-        this.taskDone = null;
-        this.duration = 1;
-    }*/
 }

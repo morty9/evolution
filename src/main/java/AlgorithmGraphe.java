@@ -1,13 +1,11 @@
+import models.DataGraph;
 import models.Stat;
 import models.Task;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Zeke on 20/07/2017.
@@ -26,7 +24,7 @@ public class AlgorithmGraphe {
     }
 
     public static Date stringToDate(String strDate) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         Date result = format.parse(strDate);
         return result;
     }
@@ -43,9 +41,9 @@ public class AlgorithmGraphe {
 
 
 
-    public static double[] getDatasetTask(ArrayList<Task> listTask, String beginDate, String endDate)
+    public static double[] getDatasetTask(ArrayList<Task> listTask, String beginDate, String endDate, int duration)
     {
-        double[] result = new double[6];
+        double[] result = new double[duration];
         String[] weekDays = {"lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
         double maxHours = maxTaskHours(listTask);
         int index = 0;
@@ -68,6 +66,17 @@ public class AlgorithmGraphe {
         return result;
     }
 
+    public static double[] getDatasetBusiness(DataGraph data)
+    {
+        double[] result = new double[(int)data.getSprintDuration()];
+
+        for (Task t : data.getListTask())
+        {
+        }
+
+        return null;
+    }
+
     public static double[] createOptimalData(double maxTimeTask)
     {
         double[] result;
@@ -85,16 +94,33 @@ public class AlgorithmGraphe {
     }
 
     public static long getDurationSprint(String beginDate, String endDate) throws ParseException {
-        Date beg = AlgorithmGraphe.stringToDate(beginDate);
-        Date end = AlgorithmGraphe.stringToDate(endDate);
+        int dayDuration = 3600 * 24;
 
-        Calendar calBeg = Calendar.getInstance();
-        Calendar calEnd = Calendar.getInstance();
-        calBeg.setTime(beg);
-        calEnd.setTime(end);
+        String formatBeginDate = beginDate.substring(0, 10);
+        String formatEndDate = endDate.substring(0, 10);
 
-        long res = (calEnd.getTimeInMillis() - calBeg.getTimeInMillis()) / 86400000;
+        formatBeginDate = formatBeginDate.replaceAll("-", "/");
+        formatEndDate = formatEndDate.replaceAll("-", "/");
 
-        return res + 1;
+        Date dateBeg = stringToDate(formatBeginDate);
+        Date dateEnd = stringToDate(formatEndDate);
+
+        long result = Math.abs(dateEnd.getTime() - dateBeg.getTime()) / (dayDuration * 1000);
+        return result + 1;
+    }
+
+    public static ArrayList<Date> getListDate(String strDateBeg, String strDateEnd) throws ParseException {
+        Date dateBeg = stringToDate(strDateBeg);
+        Date dateEnd = stringToDate(strDateEnd);
+        ArrayList<Date> listDate = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateBeg);
+        while (cal.getTime().before(dateEnd)) {
+            listDate.add(cal.getTime());
+            cal.add(Calendar.DATE, 1);
+        }
+        listDate.add(cal.getTime());
+        return listDate;
     }
 }

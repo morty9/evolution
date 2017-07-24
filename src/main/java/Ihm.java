@@ -18,8 +18,11 @@ import javafx.stage.WindowEvent;
 import models.*;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Zeke on 19/07/2017.
@@ -92,20 +95,27 @@ public class Ihm extends Application
             try {
                 Project p = getProjectByTitle(comboBoxProject.getValue().toString());
                 String sprintName = comboSprintGraphe.getValue().toString();
+                Sprint s = getSprintByTitle(sprintName, p);
 
-                // TO FIX CONITNUE, sprintName and Project is good
-                // to check the method createDataGraphe
-
-                DataGraph data = createDataGraphe(sprintName, p);
+                DataGraph data = createDataGraphe(s);
+                GrapheChart.launchTask(data);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-            //GrapheChart.launch("ButtonTask");
         });
+
         Button buttonBusiness = new Button("Graphe Business");
         buttonBusiness.setOnAction(event -> {
-            GrapheChart.launch("ButtonBusiness");
+            try {
+                Project p = getProjectByTitle(comboBoxProject.getValue().toString());
+                String sprintName = comboSprintGraphe.getValue().toString();
+                Sprint s = getSprintByTitle(sprintName, p);
+
+                DataGraph data = createDataGraphe(s);
+                GrapheChart.launchBusiness(data);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         });
 
 
@@ -187,6 +197,23 @@ public class Ihm extends Application
         return null;
     }
 
+    public Sprint getSprintByTitle(String title, Project project)
+    {
+        CallerApi call = new CallerApi();
+        try {
+            for (int idSprint : project.getId_sprint())
+            {
+                String json = call.sendGet("http://127.0.0.1:3000/scrummary/sprints/" + idSprint);
+                Sprint s = call.getSprintFromJson(json);
+                if (s.getTitle().equals(title))
+                    return s;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void deleteGridNodeByColRow(GridPane pane, int column, int row)
     {
         ObservableList<Node> childrens = pane.getChildren();
@@ -198,24 +225,10 @@ public class Ihm extends Application
         }
     }
 
-    public DataGraph createDataGraphe(String sprintName, Project project) throws ParseException {
+    public DataGraph createDataGraphe(Sprint sprint) throws ParseException {
         CallerApi call = new CallerApi();
-        Sprint sprint = new Sprint();
         ArrayList<Task> listTask = new ArrayList<>();
-
         try {
-            // Get the good sprint
-            for (int id : project.getId_sprint())
-            {
-                String jsonSprint = call.sendGet("http://127.0.0.1:3000/scrummary/sprints/" + id);
-                Sprint s = call.getSprintFromJson(jsonSprint);
-                if (s.getTitle().equals(sprintName)) {
-                    sprint = s;
-                    break;
-                }
-            }
-
-
             // Build array list of task
             for (int idTask : sprint.getId_listTasks())
             {
@@ -226,12 +239,31 @@ public class Ihm extends Application
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //TO FIX
-        //long duration = AlgorithmGraphe.getDurationSprint(sprint.getBeginningDate(), sprint.getEndDate());
-
-        DataGraph result = new DataGraph(listTask, sprint.getBeginningDate(), sprint.getEndDate(), 1);
+        long duration = AlgorithmGraphe.getDurationSprint(sprint.getBeginningDate(), sprint.getEndDate());
+        DataGraph result = new DataGraph(listTask, sprint.getBeginningDate(), sprint.getEndDate(), duration);
+        setListDateForDataGraphe(result);
 
         return result;
+    }
+
+    public void setListDateForDataGraphe(DataGraph data) throws ParseException {
+
+        String formatBeginDate = data.getDateBeg().substring(0, 10);
+        String formatEndDate = data.getDateEnd().substring(0, 10);
+
+        formatBeginDate = formatBeginDate.replaceAll("-", "/");
+        formatEndDate = formatEndDate.replaceAll("-", "/");
+
+        ArrayList<Date> arrayDate = AlgorithmGraphe.getListDate(formatBeginDate, formatEndDate);
+
+        ArrayList<String> arrayDateString = new ArrayList<String>();
+
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        for (Date d : arrayDate)
+        {
+            arrayDateString.add(format.format(d));
+        }
+        data.setListDateName(arrayDateString.toArray(new String[0]));
     }
 
     public static void main(String[] args) {

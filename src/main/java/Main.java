@@ -3,6 +3,7 @@ import models.Sprint;
 import models.Stat;
 import models.Task;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -62,10 +63,10 @@ public class Main
 
         //GrapheChart.launch("ButtonTask");
 
-        String d1 = "22/07/2017";
-        String d2 = "26/07/2017";
+        String d1 = "2017/07/22";
+        String d2 = "2017/07/30";
 
-        long k = AlgorithmGraphe.getDurationSprint(d1, d2);
+        ArrayList<Date> listDate = AlgorithmGraphe.getListDate(d1, d2);
     }
 
 

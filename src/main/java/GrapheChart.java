@@ -1,3 +1,4 @@
+import models.DataGraph;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -17,6 +18,7 @@ import org.jfree.ui.ApplicationFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Zeke on 14/07/2017.
@@ -152,7 +154,7 @@ public class GrapheChart extends ApplicationFrame
 
 
 
-    public static void launch(String button)
+    public static void launchTask(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
         graphWindows.setTitle("Graphique des tâches");
@@ -163,39 +165,53 @@ public class GrapheChart extends ApplicationFrame
                 {30, 30, 26, 26, 18, 14}
 
         };
+
+
+        String[] rowGraphe = {"Progression Optimale", "Graphe des tâches"};
+        String[] columnsGraphe = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
+
+        GrapheChart graphe = new GrapheChart("GRAPHE Test");
+        final JFreeChart chart;
+        final CategoryDataset dataset;
+
+        dataset = DatasetUtilities.createCategoryDataset(rowGraphe, columnsGraphe, data);
+        chart = graphe.createTaskChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 270));
+        chartPanel.setEnforceFileExtensions(false);
+
+        graphWindows.getContentPane().add(chartPanel);
+        graphWindows.pack();
+        graphWindows.setVisible(true);
+    }
+
+    public static void launchBusiness(DataGraph d)
+    {
+        //TO FIX CONTINUE: Datagraph good with string[] date
+        //to do AlgorithmGraph.createadataset
+
+        JDialog graphWindows = new JDialog();
+        graphWindows.setTitle("Graphique Business");
+
         final double[][] dataB = new double[][] {
                 {0, 5, 15, 25, 30, 50}
 
         };
 
-        String[] rowGraphe = {"Progression Optimale", "Graphe des tâches"};
         String[] columnsGraphe = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
         String[] rowGrapheB = {"Graphe Business"};
 
         GrapheChart graphe = new GrapheChart("GRAPHE Test");
         final JFreeChart chart;
         final CategoryDataset dataset;
-        if (button.equals("ButtonTask"))
-        {
-            dataset = DatasetUtilities.createCategoryDataset(rowGraphe, columnsGraphe, data);
-            chart = graphe.createTaskChart(dataset);
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(500, 270));
-            chartPanel.setEnforceFileExtensions(false);
 
-            graphWindows.getContentPane().add(chartPanel);
-        }
-        else if (button.equals("ButtonBusiness"))
-        {
-            dataset = DatasetUtilities.createCategoryDataset(rowGrapheB, columnsGraphe, dataB);
-            chart = graphe.createBusinessChart(dataset);
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(500, 270));
-            chartPanel.setEnforceFileExtensions(false);
+        dataset = DatasetUtilities.createCategoryDataset(rowGrapheB, columnsGraphe, dataB);
+        chart = graphe.createBusinessChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 270));
+        chartPanel.setEnforceFileExtensions(false);
 
-            graphWindows.getContentPane().add(chartPanel);
-        }
-
+        graphWindows.getContentPane().add(chartPanel);
         graphWindows.pack();
         graphWindows.setVisible(true);
     }

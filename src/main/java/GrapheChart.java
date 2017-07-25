@@ -158,7 +158,9 @@ public class GrapheChart extends ApplicationFrame
     public static JFreeChart launchTask(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
-        graphWindows.setLocation(300, 300);
+        Dimension dimensionWindow = Toolkit.getDefaultToolkit().getScreenSize();
+        graphWindows.setLocation((int)((dimensionWindow.getWidth() / 2) - (graphWindows.getWidth() / 2)),
+                (int)((dimensionWindow.getHeight() / 2) - (graphWindows.getHeight() / 2)));
         graphWindows.setTitle("Graphique des tâches");
         double[] dataGraph = AlgorithmGraph.getDatasetTask(d);
 
@@ -190,7 +192,9 @@ public class GrapheChart extends ApplicationFrame
     public static JFreeChart launchBusiness(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
-        graphWindows.setLocation(300, 300);
+        Dimension dimensionWindow = Toolkit.getDefaultToolkit().getScreenSize();
+        graphWindows.setLocation((int)((dimensionWindow.getWidth() / 2) - (graphWindows.getWidth() / 2)),
+                (int)((dimensionWindow.getHeight() / 2) - (graphWindows.getHeight() / 2)));
         graphWindows.setTitle("Graphique Business");
         double[] dataBusinessGraph = AlgorithmGraph.getDatasetBusiness(d);
 

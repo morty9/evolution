@@ -2,22 +2,19 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.*;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
 
-import java.io.IOException;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +32,9 @@ public class Ihm extends Application
     public ArrayList<Task> dataListTask;
     public String dateSprintBeg;
     public String dateSprintEnd;
+
+    JFreeChart TaskGraph;
+    JFreeChart BusinessGraph;
 
     public void start(Stage primaryStage) throws Exception
     {
@@ -61,8 +61,9 @@ public class Ihm extends Application
         });*/
 
         BorderPane pane = new BorderPane();
-        GridPane gridPane = new GridPane();
+        GridPane paneGraph = new GridPane();
         GridPane paneCombo = new GridPane();
+        GridPane paneOption = new GridPane();
 
 
         ComboBox comboBoxProject = new ComboBox(optionsProject);
@@ -98,7 +99,7 @@ public class Ihm extends Application
                 Sprint s = getSprintByTitle(sprintName, p);
 
                 DataGraph data = createDataGraphe(s);
-                GrapheChart.launchTask(data);
+                TaskGraph = GrapheChart.launchTask(data);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -112,23 +113,57 @@ public class Ihm extends Application
                 Sprint s = getSprintByTitle(sprintName, p);
 
                 DataGraph data = createDataGraphe(s);
-                GrapheChart.launchBusiness(data);
+                BusinessGraph = GrapheChart.launchBusiness(data);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         });
 
+        Button buttonSave = new Button("Sauvegarder les graphes");
+        buttonSave.setOnAction(event -> {
+            Date date = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dateString = dateFormat.format(date).replace("/", "_");
+
+            String projectString = comboBoxProject.getValue().toString().replace(" ", "_");
+            String sprintString = comboSprintGraphe.getValue().toString();
+
+            String path = System.getProperty("user.dir");
+            String finalPathTask = path + "/src/main/java/graphImage/" + projectString + "_" + sprintString + "_taskgraph_" + dateString + ".jpeg";
+            String finalPathBusiness = path + "/src/main/java/graphImage/" + projectString + "_" + sprintString + "_businessgraph_" + dateString + ".jpeg";
+
+            try {
+                if (TaskGraph != null && BusinessGraph != null) {
+                    File fileTask = new File(finalPathTask);
+                    File fileBusiness = new File(finalPathBusiness);
+                    ChartUtilities.saveChartAsPNG(fileTask, TaskGraph, 500, 300);
+                    ChartUtilities.saveChartAsPNG(fileBusiness, BusinessGraph, 500, 300);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        Button buttonClose = new Button("Quitter");
+        buttonClose.setOnAction(event -> {
+            primaryStage.close();
+        });
 
         //Set items to panel
         paneCombo.add(comboBoxProject, 0, 0);
         paneCombo.setHgap(0.5f);
 
-        gridPane.add(buttonTask, 0, 0, 2, 1);
-        gridPane.add(buttonBusiness, 0, 1, 1, 1);
-        gridPane.setHgap(0.5f);
+        paneGraph.add(buttonTask, 0, 0, 2, 1);
+        paneGraph.add(buttonBusiness, 0, 1, 1, 1);
+        paneGraph.setHgap(0.5f);
+
+        paneOption.add(buttonSave, 0, 0);
+        paneOption.add(buttonClose, 9, 0);
 
         pane.setLeft(paneCombo);
-        pane.setRight(gridPane);
+        pane.setRight(paneGraph);
+        pane.setTop(paneOption);
         Scene scene = new Scene(pane);
 
         primaryStage.setScene(scene);
@@ -214,8 +249,7 @@ public class Ihm extends Application
         return null;
     }
 
-    public void deleteGridNodeByColRow(GridPane pane, int column, int row)
-    {
+    public void deleteGridNodeByColRow(GridPane pane, int column, int row) {
         ObservableList<Node> childrens = pane.getChildren();
         for(Node node : childrens) {
             if(node instanceof ComboBox && pane.getRowIndex(node) == row && pane.getColumnIndex(node) == column) {
@@ -239,7 +273,7 @@ public class Ihm extends Application
         } catch (Exception e) {
             e.printStackTrace();
         }
-        long duration = AlgorithmGraphe.getDurationSprint(sprint.getBeginningDate(), sprint.getEndDate());
+        long duration = AlgorithmGraph.getDurationSprint(sprint.getBeginningDate(), sprint.getEndDate());
         DataGraph result = new DataGraph(listTask, sprint.getBeginningDate(), sprint.getEndDate(), duration);
         setListDateForDataGraphe(result);
 
@@ -254,7 +288,7 @@ public class Ihm extends Application
         formatBeginDate = formatBeginDate.replaceAll("-", "/");
         formatEndDate = formatEndDate.replaceAll("-", "/");
 
-        ArrayList<Date> arrayDate = AlgorithmGraphe.getListDate(formatBeginDate, formatEndDate);
+        ArrayList<Date> arrayDate = AlgorithmGraph.getListDate(formatBeginDate, formatEndDate);
 
         ArrayList<String> arrayDateString = new ArrayList<String>();
 
@@ -271,10 +305,8 @@ public class Ihm extends Application
     }
 
     class MyEvent implements EventHandler<WindowEvent> {
-
-
         public void handle(WindowEvent event) {
-            System.out.println("Exit Evolution");
+            System.out.println("Bye Bye Evolution");
         }
     }
 }

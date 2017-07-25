@@ -1,3 +1,5 @@
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import models.DataGraph;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -18,7 +20,6 @@ import org.jfree.ui.ApplicationFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by Zeke on 14/07/2017.
@@ -154,14 +155,15 @@ public class GrapheChart extends ApplicationFrame
 
 
 
-    public static void launchTask(DataGraph d)
+    public static JFreeChart launchTask(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
+        graphWindows.setLocation(300, 300);
         graphWindows.setTitle("Graphique des tâches");
-        double[] dataGraph = AlgorithmGraphe.getDatasetTask(d);
+        double[] dataGraph = AlgorithmGraph.getDatasetTask(d);
 
         final double[][] data = new double[][] {
-                AlgorithmGraphe.createOptimalData(AlgorithmGraphe.maxTaskHours(d.getListTask())),
+                AlgorithmGraph.createOptimalData(AlgorithmGraph.maxTaskHours(d.getListTask())),
                 dataGraph
         };
 
@@ -181,13 +183,16 @@ public class GrapheChart extends ApplicationFrame
         graphWindows.getContentPane().add(chartPanel);
         graphWindows.pack();
         graphWindows.setVisible(true);
+
+        return chart;
     }
 
-    public static void launchBusiness(DataGraph d)
+    public static JFreeChart launchBusiness(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
+        graphWindows.setLocation(300, 300);
         graphWindows.setTitle("Graphique Business");
-        double[] dataBusinessGraph = AlgorithmGraphe.getDatasetBusiness(d);
+        double[] dataBusinessGraph = AlgorithmGraph.getDatasetBusiness(d);
 
         final double[][] dataB = new double[][] {
                 dataBusinessGraph
@@ -209,6 +214,8 @@ public class GrapheChart extends ApplicationFrame
         graphWindows.getContentPane().add(chartPanel);
         graphWindows.pack();
         graphWindows.setVisible(true);
+
+        return chart;
     }
 
 }

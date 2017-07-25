@@ -1,8 +1,3 @@
-import models.Project;
-import models.Sprint;
-import models.Stat;
-import models.Task;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -55,10 +50,10 @@ public class Main
         l.add(t4);
         l.add(t5);
         l.add(t6);
-        double[] res = AlgorithmGraphe.getDatasetTask(l);*/
+        double[] res = AlgorithmGraph.getDatasetTask(l);*/
 
         /*Date date = new Date();
-        String str = AlgorithmGraphe.dateToDayName(date);
+        String str = AlgorithmGraph.dateToDayName(date);
         System.out.println(str);*/
 
         //GrapheChart.launch("ButtonTask");
@@ -66,7 +61,7 @@ public class Main
         String d1 = "2017/07/22";
         String d2 = "2017/07/30";
 
-        ArrayList<Date> listDate = AlgorithmGraphe.getListDate(d1, d2);
+        ArrayList<Date> listDate = AlgorithmGraph.getListDate(d1, d2);
     }
 
 

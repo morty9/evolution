@@ -21,8 +21,7 @@ public class CallerApi
     { }
 
     // Send a get request and return the Json string
-    public String sendGet(String strUrl) throws Exception
-    {
+    public String sendGet(String strUrl) throws Exception {
         try {
             URL url = new URL(strUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -44,7 +43,7 @@ public class CallerApi
             }
             String jsonString = response.toString();
 
-            System.out.println("JSON: " + jsonString);
+            //System.out.println("JSON: " + jsonString);
 
             buffInput.close();
             return jsonString;
@@ -55,8 +54,7 @@ public class CallerApi
     }
 
     // Get the list of stat from the Json string
-    public List<Stat> getListStatFromJson(String jsonString)
-    {
+    public List<Stat> getListStatFromJson(String jsonString) {
         //Transform the Json to string
         ObjectMapper mapper = new ObjectMapper();
 
@@ -71,8 +69,7 @@ public class CallerApi
     }
 
     // Get the Project from the Json string
-    public Project getProjectFromJson(String jsonString)
-    {
+    public Project getProjectFromJson(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<Project> mapperType = new TypeReference<Project>() {};
         try {
@@ -85,8 +82,7 @@ public class CallerApi
     }
 
     // Get the Sprint from the Json string
-    public Sprint getSprintFromJson(String jsonString)
-    {
+    public Sprint getSprintFromJson(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<Sprint> mapperType = new TypeReference<Sprint>() {};
         try {
@@ -99,8 +95,7 @@ public class CallerApi
     }
 
     // Get the Task from the Json string
-    public Task getTaskFromJson(String jsonString)
-    {
+    public Task getTaskFromJson(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<Task> mapperType = new TypeReference<Task>() {};
         try {

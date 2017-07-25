@@ -10,11 +10,10 @@ import java.util.*;
 /**
  * Created by Zeke on 20/07/2017.
  */
-public class AlgorithmGraphe {
+public class AlgorithmGraph {
 
 
-    public static String dateToDayName(Date date)
-    {
+    public static String dateToDayName(Date date) {
         if (date == null)
             return "";
         Calendar calendar = Calendar.getInstance();
@@ -29,8 +28,7 @@ public class AlgorithmGraphe {
         return result;
     }
 
-    public static double maxTaskHours(ArrayList<Task> listTask)
-    {
+    public static double maxTaskHours(ArrayList<Task> listTask) {
         double result = 0;
         for (Task t : listTask)
         {
@@ -39,8 +37,7 @@ public class AlgorithmGraphe {
         return result;
     }
 
-    public static double[] getDatasetTask(DataGraph data)
-    {
+    public static double[] getDatasetTask(DataGraph data) {
         double[] result = new double[(int)data.getSprintDuration()];
         String[] weekDays = data.getListDateName();
         double maxHours = maxTaskHours(data.getListTask());
@@ -61,8 +58,7 @@ public class AlgorithmGraphe {
         return result;
     }
 
-    public static double[] getDatasetBusiness(DataGraph data)
-    {
+    public static double[] getDatasetBusiness(DataGraph data) {
         double[] result = new double[(int)data.getSprintDuration()];
         String[] weekDays = data.getListDateName();
         double businessSpend = 0;
@@ -83,9 +79,7 @@ public class AlgorithmGraphe {
         return result;
     }
 
-    public static double[] createOptimalData(double maxTimeTask)
-    {
-        double[] result;
+    public static double[] createOptimalData(double maxTimeTask) {
         double inc = maxTimeTask / 5;
         double value1 = maxTimeTask;
         double value2 = value1 - inc;

@@ -29,7 +29,7 @@ public class AlgorithmGraphe {
         return result;
     }
 
-    public static double maxTaskHours(List<Task> listTask)
+    public static double maxTaskHours(ArrayList<Task> listTask)
     {
         double result = 0;
         for (Task t : listTask)
@@ -39,26 +39,21 @@ public class AlgorithmGraphe {
         return result;
     }
 
-
-
-    public static double[] getDatasetTask(ArrayList<Task> listTask, String beginDate, String endDate, int duration)
+    public static double[] getDatasetTask(DataGraph data)
     {
-        double[] result = new double[duration];
-        String[] weekDays = {"lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
-        double maxHours = maxTaskHours(listTask);
+        double[] result = new double[(int)data.getSprintDuration()];
+        String[] weekDays = data.getListDateName();
+        double maxHours = maxTaskHours(data.getListTask());
         int index = 0;
 
         for (String d : weekDays)
         {
-            double dayHours = 0;
-            for (Task t : listTask)
+            for (Task t : data.getListTask())
             {
-                // TO TEST
-                String dayTask = t.getTaskDone();
-                if (dayTask.equals(d))
-                {
-                    maxHours -= t.getDuration();
-                }
+                String daysTask = t.getTaskDone();
+                if (daysTask != null)
+                    if (daysTask.equals(d))
+                        maxHours -= t.getDuration();
             }
             result[index] = maxHours;
             index++;
@@ -69,12 +64,23 @@ public class AlgorithmGraphe {
     public static double[] getDatasetBusiness(DataGraph data)
     {
         double[] result = new double[(int)data.getSprintDuration()];
+        String[] weekDays = data.getListDateName();
+        double businessSpend = 0;
+        int index = 0;
 
-        for (Task t : data.getListTask())
+        for (String d : weekDays)
         {
+            for (Task t : data.getListTask())
+            {
+                String dayTask = t.getTaskDone();
+                if (dayTask != null)
+                    if (dayTask.equals(d))
+                        businessSpend += t.getBusinessValue();
+            }
+            result[index] = businessSpend;
+            index++;
         }
-
-        return null;
+        return result;
     }
 
     public static double[] createOptimalData(double maxTimeTask)

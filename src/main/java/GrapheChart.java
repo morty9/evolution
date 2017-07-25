@@ -158,19 +158,17 @@ public class GrapheChart extends ApplicationFrame
     {
         JDialog graphWindows = new JDialog();
         graphWindows.setTitle("Graphique des tâches");
-
+        double[] dataGraph = AlgorithmGraphe.getDatasetTask(d);
 
         final double[][] data = new double[][] {
-                AlgorithmGraphe.createOptimalData(30),
-                {30, 30, 26, 26, 18, 14}
-
+                AlgorithmGraphe.createOptimalData(AlgorithmGraphe.maxTaskHours(d.getListTask())),
+                dataGraph
         };
 
-
         String[] rowGraphe = {"Progression Optimale", "Graphe des tâches"};
-        String[] columnsGraphe = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
+        String[] columnsGraphe = d.getListDateName();
 
-        GrapheChart graphe = new GrapheChart("GRAPHE Test");
+        GrapheChart graphe = new GrapheChart("Graphe des Tâches");
         final JFreeChart chart;
         final CategoryDataset dataset;
 
@@ -187,21 +185,18 @@ public class GrapheChart extends ApplicationFrame
 
     public static void launchBusiness(DataGraph d)
     {
-        //TO FIX CONTINUE: Datagraph good with string[] date
-        //to do AlgorithmGraph.createadataset
-
         JDialog graphWindows = new JDialog();
         graphWindows.setTitle("Graphique Business");
+        double[] dataBusinessGraph = AlgorithmGraphe.getDatasetBusiness(d);
 
         final double[][] dataB = new double[][] {
-                {0, 5, 15, 25, 30, 50}
-
+                dataBusinessGraph
         };
 
-        String[] columnsGraphe = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
+        String[] columnsGraphe = d.getListDateName();
         String[] rowGrapheB = {"Graphe Business"};
 
-        GrapheChart graphe = new GrapheChart("GRAPHE Test");
+        GrapheChart graphe = new GrapheChart("Graphe Business");
         final JFreeChart chart;
         final CategoryDataset dataset;
 

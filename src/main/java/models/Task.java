@@ -12,48 +12,18 @@ public class Task
     private String description;
     private int difficulty;
     private int priority;
-    private int id_category;
-    private String color;
+    private int category;
     private float businessValue;
-    //TOFIX
-    public Date taskDone;
-
     private int duration;
     private String status;
     private int id_creator;
-    private int[] id_Listmember;
+    private String taskDone;
+    private int[] id_members;
 
+    private String createdAt;
+    private String updatedAt;
 
-    public Task(int id, String title, String description, int difficulty, int priority, int id_category, String color, float businessValue, int duration, String status, int id_creator, int[] id_Listmember) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.difficulty = difficulty;
-        this.priority = priority;
-        this.id_category = id_category;
-        this.color = color;
-        this.businessValue = businessValue;
-        this.duration = duration;
-        this.status = status;
-        this.id_creator = id_creator;
-        this.id_Listmember = id_Listmember;
-    }
-
-    public Task(Date date)
-    {
-        this.taskDone = date;
-        this.duration = 1;
-    }
-    public Task()
-    {
-        this.taskDone = null;
-        this.duration = 1;
-
-    }
-
-    public Task(int id)
-    {
-        this.id = id;
+    public Task() {
     }
 
     public int getId() {
@@ -96,20 +66,12 @@ public class Task
         this.priority = priority;
     }
 
-    public int getId_category() {
-        return id_category;
+    public int getCategory() {
+        return category;
     }
 
-    public void setId_category(int id_category) {
-        this.id_category = id_category;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     public float getBusinessValue() {
@@ -144,11 +106,35 @@ public class Task
         this.id_creator = id_creator;
     }
 
-    public int[] getId_Listmember() {
-        return id_Listmember;
+    public String getTaskDone() {
+        return taskDone;
     }
 
-    public void setId_Listmember(int[] id_Listmember) {
-        this.id_Listmember = id_Listmember;
+    public void setTaskDone(String taskDone) {
+        this.taskDone = taskDone;
+    }
+
+    public int[] getId_members() {
+        return id_members;
+    }
+
+    public void setId_members(int[] id_members) {
+        this.id_members = id_members;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

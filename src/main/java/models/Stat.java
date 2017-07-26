@@ -8,16 +8,23 @@ import java.util.Date;
 public class Stat
 {
     private int id;
-    private int[] id_listTasks;
-    private int sprintDuration;
-    private Date beginningDateProject;
+    private int id_project;
+    private String createdAt;
+    private String updatedAt;
 
-    public Stat(int id, int[] id_listTasks, int sprintDuration, Date beginningDateProject)
-    {
+    public Stat() {
+    }
+
+    public Stat(int id, int id_project) {
         this.id = id;
-        this.id_listTasks = id_listTasks;
-        this.sprintDuration = sprintDuration;
-        this.beginningDateProject = beginningDateProject;
+        this.id_project = id_project;
+    }
+
+    public Stat(int id, int id_project, String createdAt, String updatedAt) {
+        this.id = id;
+        this.id_project = id_project;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -28,27 +35,27 @@ public class Stat
         this.id = id;
     }
 
-    public int[] getId_listTasks() {
-        return id_listTasks;
+    public int getId_project() {
+        return id_project;
     }
 
-    public void setId_listTasks(int[] id_listTasks) {
-        this.id_listTasks = id_listTasks;
+    public void setId_project(int id_project) {
+        this.id_project = id_project;
     }
 
-    public int getSprintDuration() {
-        return sprintDuration;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setSprintDuration(int sprintDuration) {
-        this.sprintDuration = sprintDuration;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getBeginningDateProject() {
-        return beginningDateProject;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setBeginningDateProject(Date beginningDateProject) {
-        this.beginningDateProject = beginningDateProject;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

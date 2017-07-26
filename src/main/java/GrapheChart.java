@@ -1,3 +1,6 @@
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
+import models.DataGraph;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -27,13 +30,16 @@ public class GrapheChart extends ApplicationFrame
     public GrapheChart(String title)
     {
         super(title);
-
-
-
-
-        //setContentPane(chartPanel);
     }
 
+    /**
+     * \fn JFreeChart createTaskChart(final CategoryDataset dataset)
+     * \brief create the task chart
+     * \details build a chart of the current project and the current sprint
+     *
+     * \param dataset the datagraph object
+     * \return the Jfreechart object
+     */
     public JFreeChart createTaskChart(final CategoryDataset dataset)
     {
         final JFreeChart chart = ChartFactory.createAreaChart(
@@ -71,12 +77,20 @@ public class GrapheChart extends ApplicationFrame
         return chart;
     }
 
+    /**
+     * \fn JFreeChart createBusinessChart(final CategoryDataset dataset)
+     * \brief create the business chart
+     * \details build a chart of the current project and the current sprint
+     *
+     * \param dataset the datagraph object
+     * \return the Jfreechart object
+     */
     public JFreeChart createBusinessChart(final CategoryDataset dataset)
     {
         final JFreeChart chart = ChartFactory.createAreaChart(
                 "Graphe du Business",
                 "Jours du sprint",
-                "Budget",
+                "Coût",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
@@ -105,104 +119,88 @@ public class GrapheChart extends ApplicationFrame
         return chart;
     }
 
-    public JFreeChart createTestChart()
+
+    /**
+     * \fn JFreeChart launchTask(DataGraph d)
+     * \brief launch the task chart
+     * \details Set a windows which contain the task chart
+     *
+     * \param d the datagraph object
+     * \return the chart of the task graph
+     */
+    public static JFreeChart launchTask(DataGraph d)
     {
-        JFreeChart chart = ChartFactory.createXYAreaChart(
-                "Graphe des Tâches",
-                "Jours",
-                "Heure Total",
-                createDataset(),
-                PlotOrientation.VERTICAL,
-                true,
-                true,
-                false
-        );
+        JDialog graphWindows = new JDialog();
+        Dimension dimensionWindow = Toolkit.getDefaultToolkit().getScreenSize();
+        graphWindows.setLocation((int)((dimensionWindow.getWidth() / 2) - (graphWindows.getWidth() / 2)),
+                (int)((dimensionWindow.getHeight() / 2) - (graphWindows.getHeight() / 2)));
+        graphWindows.setTitle("Graphique des tâches");
+        double[] dataGraph = AlgorithmGraph.getDatasetTask(d);
 
-        XYPlot xyPlot = (XYPlot) chart.getPlot();
+        final double[][] data = new double[][] {
+                AlgorithmGraph.createOptimalData(AlgorithmGraph.maxTaskHours(d.getListTask())),
+                dataGraph
+        };
 
+        String[] rowGraphe = {"Progression Optimale", "Graphe des tâches"};
+        String[] columnsGraphe = d.getListDateName();
 
-        ValueAxis xAxis = xyPlot.getDomainAxis();
-        ValueAxis yAxis = xyPlot.getRangeAxis();
-        XYAnnotation diagonalLine = new XYLineAnnotation(xAxis.getRange().getUpperBound(), yAxis.getRange().getLowerBound()
-            , xAxis.getRange().getLowerBound(), yAxis.getRange().getUpperBound());
-        xyPlot.addAnnotation(diagonalLine);
+        GrapheChart graphe = new GrapheChart("Graphe des Tâches");
+        final JFreeChart chart;
+        final CategoryDataset dataset;
 
+        dataset = DatasetUtilities.createCategoryDataset(rowGraphe, columnsGraphe, data);
+        chart = graphe.createTaskChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 270));
+        chartPanel.setEnforceFileExtensions(false);
 
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesPaint(0, Color.RED);
-        renderer.setSeriesStroke(0, new BasicStroke(1.0f));
-        xyPlot.setRenderer(renderer);
-
+        graphWindows.getContentPane().add(chartPanel);
+        graphWindows.pack();
+        graphWindows.setVisible(true);
 
         return chart;
     }
 
-    public XYDataset createDataset()
-    {
-        XYSeries taskLine = new XYSeries("models.Task Todo");
-        taskLine.add(1, 30);
-        taskLine.add(2, 22);
-        taskLine.add(3, 18);
-        taskLine.add(4, 10);
-        taskLine.add(5, 5);
-
-        final XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(taskLine);
-
-
-
-        return dataset;
-
-    }
-
-
-
-    public static void launch(String button)
+    /**
+     * \fn JFreeChart launchBusiness(DataGraph d)
+     * \brief launch the business chart
+     * \details Set a windows which contain the business chart
+     *
+     * \param d the datagraph object
+     * \return the chart of the business graph
+     */
+    public static JFreeChart launchBusiness(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
-        graphWindows.setTitle("Graphique des tâches");
+        Dimension dimensionWindow = Toolkit.getDefaultToolkit().getScreenSize();
+        graphWindows.setLocation((int)((dimensionWindow.getWidth() / 2) - (graphWindows.getWidth() / 2)),
+                (int)((dimensionWindow.getHeight() / 2) - (graphWindows.getHeight() / 2)));
+        graphWindows.setTitle("Graphique Business");
+        double[] dataBusinessGraph = AlgorithmGraph.getDatasetBusiness(d);
 
-
-        final double[][] data = new double[][] {
-                AlgorithmGraphe.createOptimalData(30),
-                {30, 30, 26, 26, 18, 14}
-
-        };
         final double[][] dataB = new double[][] {
-                {0, 5, 15, 25, 30, 50}
-
+                dataBusinessGraph
         };
 
-        String[] rowGraphe = {"Progression Optimale", "Graphe des tâches"};
-        String[] columnsGraphe = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
+        String[] columnsGraphe = d.getListDateName();
         String[] rowGrapheB = {"Graphe Business"};
 
-        GrapheChart graphe = new GrapheChart("GRAPHE Test");
+        GrapheChart graphe = new GrapheChart("Graphe Business");
         final JFreeChart chart;
         final CategoryDataset dataset;
-        if (button.equals("ButtonTask"))
-        {
-            dataset = DatasetUtilities.createCategoryDataset(rowGraphe, columnsGraphe, data);
-            chart = graphe.createTaskChart(dataset);
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(500, 270));
-            chartPanel.setEnforceFileExtensions(false);
 
-            graphWindows.getContentPane().add(chartPanel);
-        }
-        else if (button.equals("ButtonBusiness"))
-        {
-            dataset = DatasetUtilities.createCategoryDataset(rowGrapheB, columnsGraphe, dataB);
-            chart = graphe.createBusinessChart(dataset);
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(500, 270));
-            chartPanel.setEnforceFileExtensions(false);
+        dataset = DatasetUtilities.createCategoryDataset(rowGrapheB, columnsGraphe, dataB);
+        chart = graphe.createBusinessChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 270));
+        chartPanel.setEnforceFileExtensions(false);
 
-            graphWindows.getContentPane().add(chartPanel);
-        }
-
+        graphWindows.getContentPane().add(chartPanel);
         graphWindows.pack();
         graphWindows.setVisible(true);
+
+        return chart;
     }
 
 }

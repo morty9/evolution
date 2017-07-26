@@ -36,6 +36,13 @@ public class Ihm extends Application
     JFreeChart TaskGraph;
     JFreeChart BusinessGraph;
 
+    /**
+     * \fn void start(Stage primaryStage) throws Exception
+     * \brief Start the ihm
+     * \details Set all item for the primaryStage, button, combobox, and do on...
+     *
+     * \param primaryStage the main stage of the Javafx Ihm
+     */
     public void start(Stage primaryStage) throws Exception
     {
         primaryStage.setTitle("Interface Evolution");
@@ -43,22 +50,11 @@ public class Ihm extends Application
         ObservableList<String> optionsProject = getListProjectName();
 
 
-        //TO FIX: add icone
         //primaryStage.getIcons().add(new Image("t.png"));
         primaryStage.setResizable(false);
         primaryStage.setHeight(500);
         primaryStage.setWidth(900);
         primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new MyEvent());
-
-
-
-
-       /* Button buttonOk = new Button("OK");
-        //Ajout de la couleur
-        buttonOk.setStyle("-fx-color: #fb0");
-        buttonOk.setOnAction(event -> {
-            System.out.println("Hey Yo");
-        });*/
 
         BorderPane pane = new BorderPane();
         GridPane paneGraph = new GridPane();
@@ -170,6 +166,14 @@ public class Ihm extends Application
         primaryStage.show();
     }
 
+
+    /**
+     * \fn ObservableList<String> getListProjectName()
+     * \brief Get the list of all the project name
+     * \details Call the api to get all project name
+     *
+     * \return an observablelist of string
+     */
     public ObservableList<String> getListProjectName()
     {
         CallerApi call = new CallerApi();
@@ -192,6 +196,14 @@ public class Ihm extends Application
         return optionsProject;
     }
 
+    /**
+     * \fn ObservableList<String> getListSprintName(Project project)
+     * \brief Get the list of all the sprint name
+     * \details Call the api to get all sprint name
+     *
+     * \param project the current project
+     * \return an observablelist of string
+     */
     public ObservableList<String> getListSprintName(Project project)
     {
         CallerApi call = new CallerApi();
@@ -212,6 +224,14 @@ public class Ihm extends Application
         return optionsSprint;
     }
 
+    /**
+     * \fn Project getProjectByTitle(String title)
+     * \brief Get the projet by his title
+     * \details Call the api to get the good project by his title
+     *
+     * \param title the project title
+     * \return an project object
+     */
     public Project getProjectByTitle(String title)
     {
         CallerApi call = new CallerApi();
@@ -232,6 +252,15 @@ public class Ihm extends Application
         return null;
     }
 
+    /**
+     * \fn Sprint getSprintByTitle(String title, Project project)
+     * \brief Get the sprint by his title
+     * \details Call the api to get the good sprint by his title
+     *
+     * \param title the sprint title
+     * \param project the current project
+     * \return an sprint object
+     */
     public Sprint getSprintByTitle(String title, Project project)
     {
         CallerApi call = new CallerApi();
@@ -249,6 +278,15 @@ public class Ihm extends Application
         return null;
     }
 
+    /**
+     * \fn void deleteGridNodeByColRow(GridPane pane, int column, int row)
+     * \brief Delete item in a gridpane with the column and the row
+     * \details parcours each item in the gridpane and delete the good one
+     *
+     * \param pane the gridpane
+     * \param int the index of the column
+     * \param int the index of the row
+     */
     public void deleteGridNodeByColRow(GridPane pane, int column, int row) {
         ObservableList<Node> childrens = pane.getChildren();
         for(Node node : childrens) {
@@ -259,6 +297,14 @@ public class Ihm extends Application
         }
     }
 
+    /**
+     * \fn DataGraph createDataGraphe(Sprint sprint) throws ParseException
+     * \brief Construct an object DataGraph for graph
+     * \details Build an object Datagraph which contain all data for graph
+     *
+     * \param sprint the current sprint
+     * \return an datagraph object
+     */
     public DataGraph createDataGraphe(Sprint sprint) throws ParseException {
         CallerApi call = new CallerApi();
         ArrayList<Task> listTask = new ArrayList<>();
@@ -280,6 +326,14 @@ public class Ihm extends Application
         return result;
     }
 
+    /**
+     * \fn void setListDateForDataGraphe(DataGraph data) throws ParseException
+     * \brief Construct the list of date in string type
+     * \details from the date begin and date end of the sprint, this method build a list of string
+     *  which contain all the date in string
+     *
+     * \param data the datagraph object
+     */
     public void setListDateForDataGraphe(DataGraph data) throws ParseException {
 
         String formatBeginDate = data.getDateBeg().substring(0, 10);

@@ -20,7 +20,14 @@ public class CallerApi
     public CallerApi()
     { }
 
-    // Send a get request and return the Json string
+    /**
+     * \fn String sendGet(String strUrl) throws Exception
+     * \brief Send a get request and return the Json string
+     * \details Create httpconnection with an url and put the result in a String
+     *
+     * \param strUrl Request url in string type
+     * \return the Json string
+     */
     public String sendGet(String strUrl) throws Exception {
         try {
             URL url = new URL(strUrl);
@@ -29,9 +36,6 @@ public class CallerApi
             conn.setRequestMethod("GET");
             conn.setRequestProperty("NET_AGENT", NET_AGENT);
             int resCode = conn.getResponseCode();
-
-            //System.out.println("Sending 'GET' request to URL : " + url);
-            //System.out.println("Response Code : " + resCode);
 
             BufferedReader buffInput = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -43,8 +47,6 @@ public class CallerApi
             }
             String jsonString = response.toString();
 
-            //System.out.println("JSON: " + jsonString);
-
             buffInput.close();
             return jsonString;
         } catch (Exception e) {
@@ -53,7 +55,14 @@ public class CallerApi
         return null;
     }
 
-    // Get the list of stat from the Json string
+    /**
+     * \fn List<Stat> getListStatFromJson(String jsonString)
+     * \brief Get the list of stat from the Json string
+     * \details Transform the json string into list of object stat with an objectmapper
+     *
+     * \param jsonString the Json in string type
+     * \return the list of all stat in the database
+     */
     public List<Stat> getListStatFromJson(String jsonString) {
         //Transform the Json to string
         ObjectMapper mapper = new ObjectMapper();
@@ -68,7 +77,14 @@ public class CallerApi
         return null;
     }
 
-    // Get the Project from the Json string
+    /**
+     * \fn Project getProjectFromJson(String jsonString)
+     * \brief Get the Project from the Json string
+     * \details Transform the json string into list of object project with an objectmapper
+     *
+     * \param jsonString the Json in string type
+     * \return the object project in the database
+     */
     public Project getProjectFromJson(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<Project> mapperType = new TypeReference<Project>() {};
@@ -81,7 +97,14 @@ public class CallerApi
         return null;
     }
 
-    // Get the Sprint from the Json string
+    /**
+     * \fn Sprint getSprintFromJson(String jsonString)
+     * \brief Get the Sprint from the Json string
+     * \details Transform the json string into list of object sprint with an objectmapper
+     *
+     * \param jsonString the Json in string type
+     * \return the object sprint in the database
+     */
     public Sprint getSprintFromJson(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<Sprint> mapperType = new TypeReference<Sprint>() {};
@@ -94,7 +117,14 @@ public class CallerApi
         return null;
     }
 
-    // Get the Task from the Json string
+    /**
+     * \fn Task getTaskFromJson(String jsonString)
+     * \brief Get the Task from the Json string
+     * \details Transform the json string into list of object task with an objectmapper
+     *
+     * \param jsonString the Json in string type
+     * \return the object task in the database
+     */
     public Task getTaskFromJson(String jsonString) {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<Task> mapperType = new TypeReference<Task>() {};

@@ -32,6 +32,14 @@ public class GrapheChart extends ApplicationFrame
         super(title);
     }
 
+    /**
+     * \fn JFreeChart createTaskChart(final CategoryDataset dataset)
+     * \brief create the task chart
+     * \details build a chart of the current project and the current sprint
+     *
+     * \param dataset the datagraph object
+     * \return the Jfreechart object
+     */
     public JFreeChart createTaskChart(final CategoryDataset dataset)
     {
         final JFreeChart chart = ChartFactory.createAreaChart(
@@ -69,6 +77,14 @@ public class GrapheChart extends ApplicationFrame
         return chart;
     }
 
+    /**
+     * \fn JFreeChart createBusinessChart(final CategoryDataset dataset)
+     * \brief create the business chart
+     * \details build a chart of the current project and the current sprint
+     *
+     * \param dataset the datagraph object
+     * \return the Jfreechart object
+     */
     public JFreeChart createBusinessChart(final CategoryDataset dataset)
     {
         final JFreeChart chart = ChartFactory.createAreaChart(
@@ -103,58 +119,15 @@ public class GrapheChart extends ApplicationFrame
         return chart;
     }
 
-    public JFreeChart createTestChart()
-    {
-        JFreeChart chart = ChartFactory.createXYAreaChart(
-                "Graphe des Tâches",
-                "Jours",
-                "Heure Total",
-                createDataset(),
-                PlotOrientation.VERTICAL,
-                true,
-                true,
-                false
-        );
 
-        XYPlot xyPlot = (XYPlot) chart.getPlot();
-
-
-        ValueAxis xAxis = xyPlot.getDomainAxis();
-        ValueAxis yAxis = xyPlot.getRangeAxis();
-        XYAnnotation diagonalLine = new XYLineAnnotation(xAxis.getRange().getUpperBound(), yAxis.getRange().getLowerBound()
-            , xAxis.getRange().getLowerBound(), yAxis.getRange().getUpperBound());
-        xyPlot.addAnnotation(diagonalLine);
-
-
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesPaint(0, Color.RED);
-        renderer.setSeriesStroke(0, new BasicStroke(1.0f));
-        xyPlot.setRenderer(renderer);
-
-
-        return chart;
-    }
-
-    public XYDataset createDataset()
-    {
-        XYSeries taskLine = new XYSeries("models.Task Todo");
-        taskLine.add(1, 30);
-        taskLine.add(2, 22);
-        taskLine.add(3, 18);
-        taskLine.add(4, 10);
-        taskLine.add(5, 5);
-
-        final XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(taskLine);
-
-
-
-        return dataset;
-
-    }
-
-
-
+    /**
+     * \fn JFreeChart launchTask(DataGraph d)
+     * \brief launch the task chart
+     * \details Set a windows which contain the task chart
+     *
+     * \param d the datagraph object
+     * \return the chart of the task graph
+     */
     public static JFreeChart launchTask(DataGraph d)
     {
         JDialog graphWindows = new JDialog();
@@ -189,6 +162,14 @@ public class GrapheChart extends ApplicationFrame
         return chart;
     }
 
+    /**
+     * \fn JFreeChart launchBusiness(DataGraph d)
+     * \brief launch the business chart
+     * \details Set a windows which contain the business chart
+     *
+     * \param d the datagraph object
+     * \return the chart of the business graph
+     */
     public static JFreeChart launchBusiness(DataGraph d)
     {
         JDialog graphWindows = new JDialog();

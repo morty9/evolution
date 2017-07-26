@@ -37,6 +37,14 @@ public class AlgorithmGraph {
         return result;
     }
 
+    /**
+     * \fn double[] getDatasetTask(DataGraph data)
+     * \brief Set a list of data to build the graph
+     * \details Build a double[] from the datagraph by checking the date and tasks
+     *
+     * \param data the datagraph object
+     * \return the double[] which contain the data for graph
+     */
     public static double[] getDatasetTask(DataGraph data) {
         double[] result = new double[(int)data.getSprintDuration()];
         String[] weekDays = data.getListDateName();
@@ -58,6 +66,14 @@ public class AlgorithmGraph {
         return result;
     }
 
+    /**
+     * \fn double[] getDatasetBusiness(DataGraph data)
+     * \brief Set a list of data to build the graph
+     * \details Build a double[] from the datagraph by checking the date and tasks
+     *
+     * \param data the datagraph object
+     * \return the double[] which contain the data for graph
+     */
     public static double[] getDatasetBusiness(DataGraph data) {
         double[] result = new double[(int)data.getSprintDuration()];
         String[] weekDays = data.getListDateName();
@@ -79,6 +95,14 @@ public class AlgorithmGraph {
         return result;
     }
 
+    /**
+     * \fn double[] createOptimalData(double maxTimeTask)
+     * \brief Set a list of data to build the optimal graph
+     * \details Build a double[] from the datagraph by checking the maximum hours of tasks, to draw the optimal graph
+     *
+     * \param maxTimeTask the int of the maximum hours of all tasks
+     * \return the double[] which contain the data for graph
+     */
     public static double[] createOptimalData(double maxTimeTask) {
         double inc = maxTimeTask / 5;
         double value1 = maxTimeTask;
@@ -93,6 +117,15 @@ public class AlgorithmGraph {
         };
     }
 
+    /**
+     * \fn long getDurationSprint(String beginDate, String endDate) throws ParseException
+     * \brief Get the duration between 2 date
+     * \details Calcul the duration between 2 date
+     *
+     * \param beginDate the begin date in string
+     * \param endDate the end date in string
+     * \return the long which contain the number of days between 2 date
+     */
     public static long getDurationSprint(String beginDate, String endDate) throws ParseException {
         int dayDuration = 3600 * 24;
 
@@ -109,6 +142,15 @@ public class AlgorithmGraph {
         return result + 1;
     }
 
+    /**
+     * \fn ArrayList<Date> getListDate(String strDateBeg, String strDateEnd) throws ParseException
+     * \brief Get the list of date between 2 dates
+     * \details get the list of date between 2 dates
+     *
+     * \param strDateBeg the begin date in string
+     * \param strDateEnd the end date in string
+     * \return the list of date
+     */
     public static ArrayList<Date> getListDate(String strDateBeg, String strDateEnd) throws ParseException {
         Date dateBeg = stringToDate(strDateBeg);
         Date dateEnd = stringToDate(strDateEnd);
